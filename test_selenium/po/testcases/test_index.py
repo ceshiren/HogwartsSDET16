@@ -1,7 +1,9 @@
 from test_selenium.po.page.index_page import IndexPage
 
+#2. 编写业务测试用例
 
 class TestIndex:
+
     def setup_class(self):
         # 实例变量可以在类的其他方法使用
         self.index_page = IndexPage()
