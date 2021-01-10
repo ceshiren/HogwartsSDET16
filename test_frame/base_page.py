@@ -1,6 +1,7 @@
 import logging
 
 import yaml
+from appium import webdriver
 from appium.webdriver import WebElement
 from appium.webdriver.common.mobileby import MobileBy
 from appium.webdriver.webdriver import WebDriver
@@ -16,8 +17,17 @@ class BasePage:
     SEND = 'send'
     CONTENT = 'content'
 
-    def __init__(self, driver: WebDriver = None):
-        self.driver = driver
+    def __init__(self):
+        caps = {}
+        caps["platformName"] = "Android"
+        caps["#deviceName"] = "hogwarts"
+        caps["appPackage"] = "com.xueqiu.android"
+        caps["appActivity"] = ".view.WelcomeActivityAlias"
+        # noReset 保留缓存， 比如登录状态
+        caps["noReset"] = "True"
+        # 关键  localhost:4723  本机ip:server端口
+        self.driver = webdriver.Remote("http://127.0.0.1:4723/wd/hub", caps)
+        self.driver.implicitly_wait(5)
         # 参考：黑名单类
         self.black_list = [(By.XPATH, "//*[@resource-id='com.xueqiu.android:id/iv_close']")]
 
@@ -77,7 +87,6 @@ class BasePage:
             elif action == self.SEND:
                 content = step.get(self.CONTENT)
                 self.send(By.XPATH, xpath_expr, content)
-    
 
     def screenshot(self, picture_path):
         self.driver.save_screenshot(picture_path)
