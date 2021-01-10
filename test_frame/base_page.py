@@ -10,6 +10,11 @@ from test_frame.black_handle import black_wrapper
 
 
 class BasePage:
+    FIND = 'find'
+    ACTION = 'action'
+    FIND_AND_CLICK = 'find_and_click'
+    SEND = 'send'
+    CONTENT = 'content'
 
     def __init__(self, driver: WebDriver = None):
         self.driver = driver
@@ -61,17 +66,18 @@ class BasePage:
         logging.info(result)
         return result
 
-    # todo: basepage 无限膨胀
     def load(self, yaml_path):
         with open(yaml_path, encoding="utf-8") as f:
             data = yaml.load(f)
         for step in data:
-            # todo：关键字可变问题
-            xpath_expr = step.get("find")
-            action = step.get('action')
-            # todo: 函数调用
-            if action == "find_and_click":
+            xpath_expr = step.get(self.FIND)
+            action = step.get(self.ACTION)
+            if action == self.FIND_AND_CLICK:
                 self.find_and_click(By.XPATH, xpath_expr)
-            elif action == "send":
-                content = step.get("content")
+            elif action == self.SEND:
+                content = step.get(self.CONTENT)
                 self.send(By.XPATH, xpath_expr, content)
+    
+
+    def screenshot(self, picture_path):
+        self.driver.save_screenshot(picture_path)

@@ -1,6 +1,3 @@
-import yaml
-from selenium.webdriver.common.by import By
-
 from test_frame.base_page import BasePage
 
 

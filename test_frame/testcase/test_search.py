@@ -1,3 +1,5 @@
+import pytest
+
 from test_frame.app import App
 
 
