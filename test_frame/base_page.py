@@ -1,5 +1,6 @@
 import logging
 
+import yaml
 from appium.webdriver import WebElement
 from appium.webdriver.common.mobileby import MobileBy
 from appium.webdriver.webdriver import WebDriver
@@ -21,7 +22,6 @@ class BasePage:
     def find(self, by, locator):
         return self.driver.find_element(by, locator)
 
-
     def finds(self, by, locator):
         return self.driver.find_elements(by, locator)
 
@@ -34,6 +34,9 @@ class BasePage:
                                  .scrollable(true).instance(0))\
                                  .scrollIntoView(new UiSelector()\
                                  .text("{text}").instance(0));')
+
+    def send(self, by, locator, content):
+        self.find(by, locator).send_keys(content)
 
     def find_by_swip(self, driver, by, locator):
         self.driver.implicitly_wait(1)
@@ -57,3 +60,18 @@ class BasePage:
         result = self.find(MobileBy.XPATH, "//*[@class='android.widget.Toast']").text
         logging.info(result)
         return result
+
+    # todo: basepage 无限膨胀
+    def load(self, yaml_path):
+        with open(yaml_path, encoding="utf-8") as f:
+            data = yaml.load(f)
+        for step in data:
+            # todo：关键字可变问题
+            xpath_expr = step.get("find")
+            action = step.get('action')
+            # todo: 函数调用
+            if action == "find_and_click":
+                self.find_and_click(By.XPATH, xpath_expr)
+            elif action == "send":
+                content = step.get("content")
+                self.send(By.XPATH, xpath_expr, content)

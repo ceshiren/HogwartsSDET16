@@ -1,0 +1,2 @@
+- find: //*[@resource-id='com.xueqiu.android:id/action_search']
+  action: find_and_click

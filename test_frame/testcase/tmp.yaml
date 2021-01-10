@@ -1,0 +1,10 @@
+#- a
+#- b
+#- c
+#- 123
+- find: //*[@text = '']
+  action: send
+  cont: 123
+- find: //*[@text = '']
+  action: click
+

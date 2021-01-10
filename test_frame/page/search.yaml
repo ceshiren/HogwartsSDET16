@@ -1,0 +1,3 @@
+- find: //*[@resource-id='com.xueqiu.android:id/search_input_text']
+  action: send
+  content: xxxxx

@@ -1,4 +1,9 @@
 def black_wrapper(fun):
+    """
+    python cookbook
+    :param fun:
+    :return:
+    """
     def run(*args, **kwargs):
         basepage = args[0]
         try:

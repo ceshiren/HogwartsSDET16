@@ -1,4 +1,6 @@
 # 封装，继承，多态，抽象 <-> 面向过程
+import yaml
+
 
 def b(fun):
     # fun = a
@@ -28,3 +30,8 @@ def a():
 
 def test():
     a()
+
+def test_yaml():
+    with open("./tmp.yaml", 'r', encoding="utf-8") as f:
+        data = yaml.load(f)
+    print("yaml data: ", data)
