@@ -2,11 +2,13 @@ import os
 
 from flask import Flask
 from flask import request
+from flask_cors import CORS
 from flask_restful import Resource, Api, abort
 from flask_sqlalchemy import SQLAlchemy
 from jenkinsapi.jenkins import Jenkins
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://tmp:ceshiren.com@182.92.129.158/tmp?charset=utf8mb4'
 db = SQLAlchemy(app)
@@ -22,6 +24,9 @@ class TestCaseTable(db.Model):
     file_name = db.Column(db.String(80), unique=False, nullable=False)
     content = db.Column(db.String(300), unique=False, nullable=False)
     report = db.relationship('Report', backref='test_case_table', lazy=True)
+
+    def as_dict(self):
+        return {"name": self.name,"file_name": self.file_name, "content": self.content, "description": self.description}
 
     def __repr__(self):
         return '<TestCase %r>' % self.name
@@ -41,7 +46,7 @@ class Report(db.Model):
         return '<TestCase %r>' % self.name
 
 
-class TestCaseStore(Resource):
+class TestCase(Resource):
     def post(self):
         """
         存储用例
@@ -56,8 +61,30 @@ class TestCaseStore(Resource):
             db.session.add(testcase)
             db.session.commit()
             return "OK"
+        else:
+            testcase = TestCaseTable(**request.json)
+            db.session.add(testcase)
+            db.session.commit()
+            return "OK"
+
+
         # 返回不同的状态码，和默认的错误页
         abort(404)
+
+    def put(self):
+        """
+        更新用例
+        :return:
+        """
+        if "name" in request.json:
+            testcase = TestCaseTable.query.filter_by(name = request.json.get('name')).first()
+            testcase.content = request.json.get("content")
+            testcase.description = request.json.get("description")
+            testcase.file_name = request.json.get("file_name")
+            db.session.commit()
+            return {"errcode": 0, "content": "OK"}
+
+
 
 
 @app.route("/get_testcase", methods=['get'])
@@ -71,7 +98,7 @@ def get_testcase():
         name = request.args['name']
         testcase = TestCaseTable.query.filter_by(name=name).first()
         return testcase.content
-    abort(404)
+    return {"errcode": 0, "body": [i.as_dict() for i in TestCaseTable.query.all()]}
 
 
 @app.route("/run", methods=['get'])
@@ -100,7 +127,7 @@ def report_upload():
         return "OK"
 
 
-api.add_resource(TestCaseStore, '/store')
+api.add_resource(TestCase, '/testcase')
 
 if __name__ == "__main__":
     app.run(debug=True)
