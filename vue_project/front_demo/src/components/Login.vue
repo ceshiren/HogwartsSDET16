@@ -85,7 +85,7 @@ export default {
             console.log(response)
             if (response.data.msg == "OK") {
                 console.log(this);
-                this.$router.push("/navlist");
+                this.$router.push("/navlist/testcase");
             }
         });
     },

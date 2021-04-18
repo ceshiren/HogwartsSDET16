@@ -4,6 +4,7 @@
         <list />
       <!-- -->
     </v-navigation-drawer>
+    <router-view />
     
   </v-app>
 </template>
