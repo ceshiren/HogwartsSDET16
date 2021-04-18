@@ -26,7 +26,8 @@ class TestCaseTable(db.Model):
     report = db.relationship('Report', backref='test_case_table', lazy=True)
 
     def as_dict(self):
-        return {"name": self.name,"file_name": self.file_name, "content": self.content, "description": self.description}
+        return {"name": self.name, "file_name": self.file_name, "content": self.content,
+                "description": self.description}
 
     def __repr__(self):
         return '<TestCase %r>' % self.name
@@ -40,7 +41,6 @@ class Report(db.Model):
     description = db.Column(db.String(80), unique=False, nullable=True)
     dir = db.Column(db.String(300), unique=False, nullable=False)
     testcase_id = db.Column(db.String(80), db.ForeignKey('test_case_table.name'), nullable=False)
-
 
     def __repr__(self):
         return '<TestCase %r>' % self.name
@@ -67,7 +67,6 @@ class TestCase(Resource):
             db.session.commit()
             return "OK"
 
-
         # 返回不同的状态码，和默认的错误页
         abort(404)
 
@@ -77,7 +76,7 @@ class TestCase(Resource):
         :return:
         """
         if "name" in request.json:
-            testcase = TestCaseTable.query.filter_by(name = request.json.get('name')).first()
+            testcase = TestCaseTable.query.filter_by(name=request.json.get('name')).first()
             testcase.content = request.json.get("content")
             testcase.description = request.json.get("description")
             testcase.file_name = request.json.get("file_name")
@@ -85,6 +84,17 @@ class TestCase(Resource):
             return {"errcode": 0, "content": "OK"}
 
 
+class Login(Resource):
+    def post(self):
+        """
+        存储用例
+        :return:
+        """
+        print(request.json)
+        if "ceshiren.com" in request.json.get("account") and "123456" == request.json.get("password"):
+            return {"msg": "OK"}
+        else:
+            return {"msg": "ERROR"}
 
 
 @app.route("/get_testcase", methods=['get'])
@@ -128,6 +138,7 @@ def report_upload():
 
 
 api.add_resource(TestCase, '/testcase')
+api.add_resource(Login, '/login')
 
 if __name__ == "__main__":
     app.run(debug=True)

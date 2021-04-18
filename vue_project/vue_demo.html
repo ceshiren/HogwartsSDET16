@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model='content'>
+        <ul>
+            <li v-for="i in search_result">{{i}}</li>
+        </ul>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            content: "",
+            search_result: []
+        },
+        watch: {
+            content(tmp) {
+                var path ="https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=" + this.content + "&cb=a";
+                var script = document.createElement("script");
+                script.src = path;
+                document.body.appendChild(script);
+            }
+        }
+    });
+
+    function a(callback_value) {
+        console.log(callback_value.s);
+        vm.search_result = callback_value.s;
+
+    }
+
+</script>

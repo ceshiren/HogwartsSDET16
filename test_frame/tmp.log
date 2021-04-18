@@ -1,0 +1,4 @@
+[2021-03-14 11:37:53,622]  test_tmp.py:19:test_record: hello
+[2021-03-14 11:37:56,630]  test_tmp.py:24:test_record_2: hello
+[2021-04-08 20:39:41,714]  test_tmp.py:19:test_record: hello
+[2021-04-08 20:39:44,724]  test_tmp.py:24:test_record_2: hello

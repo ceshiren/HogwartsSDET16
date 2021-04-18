@@ -1,2 +1,4 @@
 /venv/
 *.mp4
+*.history
+*.idea
