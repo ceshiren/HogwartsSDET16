@@ -14,6 +14,7 @@ class TestContact:
     def test_token(self, corpid, corpsecret, result):
         r = self.contact.get_token(corpid, corpsecret)
         assert r.get('errcode') == result
+        raise ValueError()
 
     def test_create(self):
 
